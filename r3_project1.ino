@@ -1,10 +1,12 @@
 // C++ code
 //
-int potPin = A5;
-int SA1 = 6, SA2 = 7, SA3 = 8, SA4 = 9; 
-int SB1 = 2, SB2 = 3, SB3 = 4, SB4 = 5;
+// Assign names for pins to make it easier to track
+int potPin = A5;                                    // Pin initialized for the 
+int SA1 = 6, SA2 = 7, SA3 = 8, SA4 = 9;             // Pins used to connect to 1st decoder
+int SB1 = 2, SB2 = 3, SB3 = 4, SB4 = 5;             // Pins used to connect to 2nd decoder
 int onesDigit, tensDigit;
 
+// Initialize pins as input and output 
 void setup()
 {
   pinMode(potPin, INPUT);
@@ -19,19 +21,19 @@ void setup()
   Serial.begin(9600);
 }
 
+// The instruction that is carried out for as long as the circuit is running
 void loop()
 {
-  int potMeasure = analogRead(A5);
-  potMeasure = map(potMeasure, 0, 1023, 0, 99);
-  Serial.println(potMeasure);
-  onesDigit = potMeasure%10;
-  tensDigit = (potMeasure/10)%10;
-  leftSSEG(tensDigit);
-  rightSSEG(onesDigit);
-  Serial.println(potMeasure);
-  //delay(20);
+  int potMeasure = analogRead(A5);                  // Reads input from the potentiometer
+  potMeasure = map(potMeasure, 0, 1023, 0, 99);     // Built in map function rescales 0 to 1023 scale to 0 to 99 scale
+  Serial.println(potMeasure);                       // Was used to display on serial screen during debugging 
+  onesDigit = potMeasure%10;                        // Splices two digit number to get the ones digits
+  tensDigit = (potMeasure/10)%10;                   // Splices two digit number to get the tens digits
+  leftSSEG(tensDigit);                              // Calls function for the left sseg and passes the tens digit
+  rightSSEG(onesDigit);                             // Calls function for the right sseg and passes ones digit
 }
 
+// Uses switch cases to map each digit from 0-9 with a combination of high's and lows for the signals that is read by the decoder
 void rightSSEG(int onesDigit)
 {
   switch (onesDigit)
@@ -108,6 +110,7 @@ void rightSSEG(int onesDigit)
   }
 }
 
+// Same process as right sseg but passes tenDigit variable instead
 void leftSSEG(int tensDigit)
 {
   switch (tensDigit)
